@@ -1,2 +1,2 @@
-def objective_body(x):
+def evaluation(x):
     return (x - 2) ** 2

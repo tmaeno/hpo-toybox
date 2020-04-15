@@ -1,12 +1,12 @@
 import optuna
 from optuna.pruners import SuccessiveHalvingPruner
 
-from objective_body import objective_body
+from evaluation import evaluation
 
 
 def objective(trial):
     x = trial.suggest_uniform('x', -10, 10)
-    return objective_body(x)
+    return evaluation(x)
 
 
 study = optuna.create_study(pruner=SuccessiveHalvingPruner())
