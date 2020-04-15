@@ -1,4 +1,5 @@
 import optuna
+from optuna.pruners import SuccessiveHalvingPruner
 
 from objective_body import objective_body
 
@@ -8,6 +9,6 @@ def objective(trial):
     return objective_body(x)
 
 
-study = optuna.create_study()
+study = optuna.create_study(pruner=SuccessiveHalvingPruner())
 study.optimize(objective, n_trials=10)
 print(study.best_params)

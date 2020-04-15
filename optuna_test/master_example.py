@@ -1,6 +1,7 @@
 import uuid
 import json
 import optuna
+from optuna.pruners import SuccessiveHalvingPruner
 import socket
 from concurrent.futures import ThreadPoolExecutor
 
@@ -32,7 +33,7 @@ def func():
     study.optimize(objective, n_trials=10 // NUM_PAR)
 
 
-study = optuna.create_study(study_name=study_name, storage=db_name)
+study = optuna.create_study(study_name=study_name, storage=db_name, pruner=SuccessiveHalvingPruner())
 
 
 with ThreadPoolExecutor(max_workers=NUM_PAR) as ex:
