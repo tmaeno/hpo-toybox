@@ -30,6 +30,7 @@ taskParamMap['coreCount'] = 1
 taskParamMap['site'] = 'CERN-PROD'
 taskParamMap['nucleus'] = 'CERN-PROD'
 taskParamMap['cloud'] = 'WORLD'
+taskParamMap['container_name'] = 'docker://gitlab-registry.cern.ch/zhangruihpc/endpointcontainer:mlflow'
 
 logDatasetName = 'panda.jeditest.log.{0}'.format(uuid.uuid4())
 outDatasetName = 'panda.jeditest.HPO.{0}'.format(uuid.uuid4())
@@ -51,7 +52,7 @@ taskParamMap['hpoRequestData'] = {'sandbox': None,
 
 taskParamMap['jobParameters'] = [
     {'type':'constant',
-     'value': '-o output.json -j "" -p "{0}"'.format(quote('bash ./training.sh'))
+     'value': '-o output.json -j "" -p "{0}"'.format(quote('bash ./exec_in_container.sh'))
      },
     {'type': 'constant',
      'value': '--writeInputToTxt IN_DATA:input_ds.json --inSampleFile input.json'
