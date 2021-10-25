@@ -27,4 +27,6 @@ RUN chown -R atlpan:zp /var/log/panda
 
 RUN chkconfig --add httpd-pandasrv
 
+CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"
+
 EXPOSE 25080 25443
