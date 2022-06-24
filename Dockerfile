@@ -1,6 +1,6 @@
 FROM docker.io/alpine:latest
 
-RUN apk --no-cache add python3 wget curl net-tools telnet && \
+RUN apk --no-cache add python3 wget curl net-tools busybox-extras && \
     python3 -m venv /opt/panda && \
     /opt/panda/bin/pip install -U pip && \
     /opt/panda/bin/pip install -U setuptools && \
