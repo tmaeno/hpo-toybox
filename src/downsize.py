@@ -47,9 +47,14 @@ while True:
     quality = 80
     max_height = 1200
 
-    for f in os.listdir(target_folder_name):
+    f_list = os.listdir(target_folder_name)
+    n_failures = 0
+    for i, f in enumerate(f_list):
+        if i % 20 == 0:
+            print(f"  Processed: {i}/{len(f_list)}")
         input_path = os.path.join(target_folder_name, f)
         output_path = input_path + '.new.jpg'
+        is_failed = True
         try:
             with Image.open(input_path) as img:
                 if img.mode == 'RGBA':
@@ -60,11 +65,14 @@ while True:
                 enhancer = ImageEnhance.Sharpness(img)
                 img = enhancer.enhance(1.1)
                 img.save(output_path, "JPEG", quality=quality, optimize=True)
+                is_failed = False
         except UnidentifiedImageError as e:
             pass
         except Exception as e:
             print(f"Error processing {input_path}: {e}")
         os.remove(input_path)
+        if is_failed:
+            n_failures += 1
 
     output_zip = old_filename.rsplit('.', 1)[0] + '.zip'
 
@@ -76,3 +84,8 @@ while True:
                 zipf.write(file_path, arcname=file)
 
     shutil.rmtree(target_folder_name)
+    if n_failures / len(f_list) > 0.2:
+        print("More than 20% failures, something went wrong. Keeping original file")
+    else:
+        os.remove(old_filename)
+
