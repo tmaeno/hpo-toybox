@@ -7,14 +7,32 @@ import shutil
 from PIL import Image, UnidentifiedImageError, ImageEnhance
 
 
-def move(dest, cur_dir):
+def remove_redundant_sub_dirs(cur_dir):
+    file_list = []
+    sub_dirs = []
+    for _i in os.listdir(cur_dir):
+        path = os.path.join(cur_dir, _i)
+        if os.path.isdir(path):
+            sub_dirs.append(_i)
+        else:
+            file_list.append(_i)
+    if not file_list and len(sub_dirs) == 1:
+        sub_dir_path = str(os.path.join(cur_dir, sub_dirs[0]))
+        for _i in os.listdir(sub_dir_path):
+            shutil.move(os.path.join(sub_dir_path, _i), cur_dir)
+        shutil.rmtree(os.path.join(cur_dir, sub_dirs[0]))
+        remove_redundant_sub_dirs(cur_dir)
+
+
+def move(dest, cur_dir, prefix):
     for _root, _sub_dirs, _files in os.walk(cur_dir):
         if dest != cur_dir:
             for filename in _files:
-                path = str(os.path.join(_root, filename))
-                shutil.move(path, dest)
+                in_path = str(os.path.join(_root, filename))
+                out_path = str(os.path.join(dest, prefix + "_" + filename))
+                shutil.move(in_path, out_path)
         for sub_dir in _sub_dirs:
-            move(dest, os.path.join(cur_dir, sub_dir))
+            move(dest, os.path.join(cur_dir, sub_dir), prefix + "_" + sub_dir)
             shutil.rmtree(os.path.join(cur_dir, sub_dir))
 
 
@@ -41,7 +59,8 @@ while True:
         print(f"Unsupported file format: \"{old_filename}\"")
         sys.exit(1)
 
-    move(target_folder_name, target_folder_name)
+    remove_redundant_sub_dirs(target_folder_name)
+    move(target_folder_name, target_folder_name, "base")
 
     resize_factor = 0.8
     quality = 80
