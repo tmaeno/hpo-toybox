@@ -15,12 +15,17 @@ def remove_redundant_sub_dirs(cur_dir):
         if os.path.isdir(path):
             sub_dirs.append(_i)
         else:
+            suffix = _i.split(".")[-1]
+            if suffix in ["url", "txt", "html"]:
+                continue
             file_list.append(_i)
     if not file_list and len(sub_dirs) == 1:
-        sub_dir_path = str(os.path.join(cur_dir, sub_dirs[0]))
+        orig_sub_dir = str(os.path.join(cur_dir, sub_dirs[0]))
+        sub_dir_path = orig_sub_dir + "_tmp"
+        os.rename(orig_sub_dir, sub_dir_path)
         for _i in os.listdir(sub_dir_path):
             shutil.move(os.path.join(sub_dir_path, _i), cur_dir)
-        shutil.rmtree(os.path.join(cur_dir, sub_dirs[0]))
+        shutil.rmtree(sub_dir_path)
         remove_redundant_sub_dirs(cur_dir)
 
 
@@ -66,6 +71,7 @@ while True:
         base_dir = os.path.dirname(full_name)
 
         target_folder_name = old_filename.split('.')[0]
+        print(f"Processing file: \"{old_filename}\"")
 
         os.chdir(base_dir)
         if os.path.exists(target_folder_name):
@@ -100,7 +106,7 @@ while True:
             is_failed = True
             try:
                 with Image.open(input_path) as img:
-                    if img.mode == 'RGBA':
+                    if img.mode in ['RGBA', 'LA', 'L', 'PA', 'P', 'CMYK']:
                         img = img.convert('RGB')
                     height = int(min(img.height * 0.8, max_height))
                     width = int((height / img.height) * img.width)
@@ -130,6 +136,7 @@ while True:
         max_failures = 0.2
         if n_failures / len(f_list) > max_failures:
             print(f"More than {int(max_failures*100)}% failures, something went wrong. Keeping original file")
+            os.remove(tmp_output_zip)
         else:
             shutil.rmtree(target_folder_name)
             os.remove(old_filename)
