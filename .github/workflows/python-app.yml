@@ -30,3 +30,5 @@ jobs:
         pip show pip | grep Location 
         which prun
         ls -la /opt/hostedtoolcache/Python/3.14.4/x64
+        ls -la /opt/hostedtoolcache/Python/3.14.4/x64/etc
+        
