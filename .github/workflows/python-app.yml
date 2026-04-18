@@ -29,3 +29,4 @@ jobs:
         env | grep PATH
         pip show pip | grep Location 
         which prun
+        cat /opt/hostedtoolcache/Python/3.14.4/x64/etc/panda_setup.sh
