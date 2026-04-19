@@ -19,12 +19,13 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v6
       with:
-        python-version: "3.11"
+        python-version: "3.12"
     - name: Python Testing
       run: |
         env | grep PATH
         which pip
         which python
+        python --version
         python -m pip --version
         pip --version
         python -m site --user-site
