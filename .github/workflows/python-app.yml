@@ -6,8 +6,8 @@ name: Python application
 on:
   workflow_dispatch:
 
-permissions:
-  contents: read
+#permissions:
+#  contents: read
 
 jobs:
   build:
