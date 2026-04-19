@@ -27,6 +27,7 @@ jobs:
         which python
         python -m pip --version
         pip --version
+        python -m site --user-site
          
     - name: Install dependencies
       run: |
